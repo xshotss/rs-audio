@@ -1,6 +1,8 @@
-use std::time::Duration;
+use std::{time::Duration};
 use rodio::{source::SineWave, OutputStream, Sink, Source};
-use crate::note::{Note, WaveForm};
+use crate::note::{Note};
+use crate::waveform::{generate_sample, WaveForm};
+use hound::{WavWriter, WavSpec};
 
 
 pub enum BPMChoice {
@@ -58,7 +60,9 @@ impl Song {
     }
 
     pub fn play(&mut self) {
-        let mut volume_warning_given: bool = false; // if the volume warning has been given (this is for volume warnings with sine waves)
+        let mut volume_warning_given: bool = false; /*
+        if the volume warning has been given (this is for volume warnings with sine waves)
+        */
 
         // creates stream and sink (audio mixer)
         let (_stream, handle) = OutputStream::try_default().unwrap();
@@ -131,6 +135,48 @@ impl Song {
         }
 
         sink.sleep_until_end();
+    }
+
+    /**
+     Exports a Song struct to a .wav file.<br>It creates a .wav file in the current directory.<br>
+     Usage:
+     ```
+     let song = Song::default();
+     
+     song.export_to_wav("test.wav");
+     ```
+     */
+    pub fn export_to_wav(&self, filename: String) -> Result<(), Box<dyn std::error::Error>> {
+        // set up wave file specs
+        let spec = WavSpec {
+            channels: 1,
+            sample_rate: 44100, // 44.1k Hz
+            bits_per_sample: 16, // 16 bit depth
+            sample_format: hound::SampleFormat::Int,
+        };
+
+        // create writer for writing to files
+        let mut writer = match WavWriter::create(filename, spec) {
+            Ok(e) => e,
+            Err(e) => {
+                eprintln!("RS-AUDIO: Error while creating file: {e}");
+                std::process::exit(1);
+            }
+        };
+
+        for note in &self.notes {
+            let total_samples = (note.duration * 44100.0) as usize;
+            for i in 0..total_samples {
+                let phase = (i as f64 * note.frequency / 44100.0) % 1.0; // generate phase
+                let sample = generate_sample(&note.waveform, phase) * note.volume as f64; // generate sample from waveform
+                writer.write_sample((sample * i16::MAX as f64) as i16)?; // add the sample
+            }
+        }
+
+        writer.finalize()?;
+
+
+        Ok(())
     }
     
 }

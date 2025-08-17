@@ -1,3 +1,7 @@
+use rodio::source::SineWave;
+
+use crate::WaveForm;
+
 /**
 This struct represents a note.<br><br>
 It is the building block for all songs made with rs-audio.<br>
@@ -40,14 +44,20 @@ impl Default for Note {
     }
 }
 
-/**
-This enum is used for declaring waveform types.<br><br>
-NOTE: Only the sine wave is currently implemented.
-*/
-#[derive(Clone, PartialEq)]
-pub enum WaveForm {
-    Sine,
-    Square,
-    Sawtooth,
-    Triangle
+
+impl Note {
+    pub fn to_approx_sine(&self) -> SineWave {
+        /*
+        this emulates sines, squares, sawtooths and triangles as rodio sine waves
+        it's not extremely accurate but it works
+        */
+        let effective_freq = match self.waveform {
+            WaveForm::Sine => self.frequency,
+            WaveForm::Square => self.frequency * 1.27, // adds odd harmonics
+            WaveForm::Sawtooth => self.frequency * 1.5, // rich harmonics
+            WaveForm::Triangle => self.frequency * 1.16, // soft harmonics
+        };
+        
+        SineWave::new(effective_freq as f32)
+    }
 }
