@@ -2,7 +2,7 @@ use crate::assets::loader::load_asset;
 use crate::note::Note;
 use crate::waveform::WaveForm;
 use rodio::{source::SineWave, OutputStream, Sink, Source};
-use std::time::Duration;
+use std::{io::{Error, ErrorKind}, time::Duration};
 
 /**
 The BPMChoice is an enum for picking the <b>beats per minute</b> for making songs.<br>
@@ -152,4 +152,60 @@ impl Song {
 
         sink.sleep_until_end();
     }
+
+    /**
+    Plays a Song struct from a separate thread.<br>
+    This is much more efficient as it means that you can do other tasks while playing the song.<br>
+    It is recommended to use this instead of `.play()` if you want to od other tasks while playing the song.<br>
+
+    Usage:
+    ```
+    use rs_audio::*;
+
+    let song = Song::default();
+    song.play_from_thread();
+    ```
+    
+    */
+    pub fn play_from_thread(&mut self) -> Result<(), Error>{
+        // extract the notes we need before moving into the thread
+        let notes = std::mem::take(&mut self.notes); // takes ownership of the vec
+        
+    
+        std::thread::spawn(move || {
+            let (_stream, handle) = match OutputStream::try_default() {
+                Ok(e) => e,
+                Err(e) => {
+                    return Err(Error::new(ErrorKind::Other, e.to_string()))
+                }
+            };
+
+
+            let sink = match Sink::try_new(&handle) {
+                Ok(e) => e,
+                Err(e) => {
+                    return Err(Error::new(ErrorKind::Other, e.to_string()))
+                }
+            };
+        
+            for note in notes { 
+                let converted = match note.wave {
+                    WaveForm::Sine => SineWave::new(note.freq as f32),
+                    _ => note.to_approx_sine(),
+                }
+                .take_duration(Duration::from_secs_f64(note.dur))
+                .amplify(note.vol);
+
+                sink.append(converted);
+            }
+        
+            sink.sleep_until_end();
+
+            Ok(())
+        });
+
+        Ok(())
+    }
+
+
 }
