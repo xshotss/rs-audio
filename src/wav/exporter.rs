@@ -1,4 +1,4 @@
-use std::{fs::File, io::BufReader};
+use std::{fs::File, io::{BufReader, Error, ErrorKind}};
 
 use hound::{WavSpec, WavWriter};
 use rodio::{Decoder, OutputStream, Sink};
@@ -48,14 +48,38 @@ impl Song {
         Ok(())
     }
 
-    pub fn play_wav(file_path: &str) {
-        let (_stream, handle) = OutputStream::try_default().unwrap();
-        let sink = Sink::try_new(&handle).unwrap();
 
-        let file = File::open(file_path).unwrap();
+    /**
+    Plays a .wav file.<br><br>
+
+
+    Usage:
+    ```
+    use rs_audio::*;
+
+    play_wav("test.wav").unwrap();
+    ```
+
+    */
+    pub fn play_wav(file_path: &str) -> Result<(), Error> {
+        let (_stream, handle) = OutputStream::try_default().unwrap();
+
+        let sink = match Sink::try_new(&handle) {
+            Ok(e) => e,
+
+            /* convert PlayError to std::io::Error */
+            Err(e) => return Err(Error::new(ErrorKind::Other, e.to_string()))
+        };
+
+        let file = match File::open(file_path) {
+            Ok(e) => e,
+            Err(e) => return Err(e),
+        };
         let source = Decoder::new(BufReader::new(file)).unwrap();
 
         sink.append(source);
-        sink.sleep_until_end(); // Blocks until finished
+        sink.sleep_until_end(); // blocks thread until finished
+
+        Ok(())
     }
 }
