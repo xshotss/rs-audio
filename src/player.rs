@@ -87,7 +87,7 @@ impl Song {
 
     pub fn play(&mut self) {
         let mut volume_warning_given: bool = false; /*
-        if the volume warning has been given (this is for volume warnings with sine waves) */
+                                                    if the volume warning has been given (this is for volume warnings with sine waves) */
 
         // creates stream and sink (audio mixer)
         let (_stream, handle) = OutputStream::try_default().unwrap();
