@@ -49,7 +49,8 @@ Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
 Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Triangle },
 ], BPMChoice::Default);
 
-second_song.play();
+second_song.play().unwrap(); // Uses the main thread
+second_song.play_from_thread().unwrap(); // Multithreaded (allows you to do other stuff while the music is playing.)
 second_song.export_to_wav("test.wav".to_string());
 ```
 */
@@ -85,13 +86,27 @@ impl Song {
         }
     }
 
-    pub fn play(&mut self) {
+    pub fn play(&mut self) -> Result<(), Error> {
         let mut volume_warning_given: bool = false; /*
-                                                    if the volume warning has been given (this is for volume warnings with sine waves) */
+            if the volume warning has been given (this is for volume warnings with sine waves) */
 
         // creates stream and sink (audio mixer)
-        let (_stream, handle) = OutputStream::try_default().unwrap();
-        let sink = Sink::try_new(&handle).unwrap();
+        let (_stream, handle) = match OutputStream::try_default() {
+            Ok(e) => e,
+            Err(e) => {
+                return Err(Error::new(ErrorKind::Other, e.to_string()))
+            }
+        };
+
+
+        let sink = match Sink::try_new(&handle) {
+            Ok(e) => e,
+            Err(e) => {
+                return Err(Error::new(ErrorKind::Other, e.to_string()))
+            }
+        };
+
+
         // iterates over the notes
         for note in &mut self.notes {
             if !volume_warning_given && note.vol > 0.20 && note.wave == WaveForm::Sine {
@@ -151,19 +166,23 @@ impl Song {
         }
 
         sink.sleep_until_end();
+        Ok(())
     }
 
     /**
     Plays a Song struct from a separate thread.<br>
     This is much more efficient as it means that you can do other tasks while playing the song.<br>
-    It is recommended to use this instead of `.play()` if you want to od other tasks while playing the song.<br>
+    It is recommended to use this instead of `.play()` if you want to do other tasks while playing the song.<br>
 
-    Usage:
+    **NOTE**: This feature does not have warnings for notes whose volume is over 0.20.<br> Please ensure your notes
+    are at 0.20 volume or less.<br>
+
+    ## Usage:
     ```
     use rs_audio::*;
 
     let song = Song::default();
-    song.play_from_thread();
+    song.play_from_thread().unwrap();
     ```
     
     */
