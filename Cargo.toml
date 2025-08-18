@@ -1,7 +1,13 @@
 [package]
 name = "rs-audio"
 version = "0.1.0"
-edition = "2024"
+authors = ["shots"]
+description = "A retro audio engine for making music programmatically."
+license = "MIT"
+repository = "https://github.com/xshotss/rs-audio"
+keywords = ["audio", "music", "dsp"]
+categories = ["audio", "multimedia"]
+edition = "2021"
 
 [dependencies]
 hound = "3.5.1"

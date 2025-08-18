@@ -6,12 +6,14 @@ use crate::WaveForm;
 This struct represents a note.<br><br>
 It is the building block for all songs made with rs-audio.<br>
 ```
+use rs_audio::*;
+
 let note: Note = Note {
     freq: 440.0,
     dur: 3.0,
     vol: 0.20,
     wave: WaveForm::Sine,
-}
+};
 
 let default_note = Note::default(); // This outputs the same note as the one above.
 ```
@@ -19,7 +21,7 @@ let default_note = Note::default(); // This outputs the same note as the one abo
 #[derive(Clone)]
 pub struct Note {
     pub freq: f64, // frequency in hertz
-    pub dur: f64, // duration in seconds
+    pub dur: f64,  // duration in seconds
 
     pub vol: f32, // the volume/amplituide (0.0 to 1.0)
 
@@ -31,6 +33,8 @@ impl Default for Note {
     Generates a default sine wave. <br><br>It has a frequency for 440 Hertz, lasts 3 seconds, and its volume is 0.20.<br><br>
     Usage:
     ```
+    use rs_audio::*;
+
     let default_note: Note = Note::default();
     ```
     */
@@ -44,7 +48,6 @@ impl Default for Note {
     }
 }
 
-
 impl Note {
     pub fn to_approx_sine(&self) -> SineWave {
         /*
@@ -57,7 +60,7 @@ impl Note {
             WaveForm::Sawtooth => self.freq * 1.5, // rich harmonics
             WaveForm::Triangle => self.freq * 1.16, // soft harmonics
         };
-        
+
         SineWave::new(effective_freq as f32)
     }
 }
