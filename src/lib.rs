@@ -25,7 +25,7 @@
 //!
 //!
 
-pub mod assets;
+pub(crate) mod assets;
 pub mod note;
 pub mod player;
 pub mod wav;

@@ -14,7 +14,7 @@ pub enum WaveForm {
 
 // generates a sample using a waveform
 // only intended for use by the library
-pub fn generate_sample(waveform: &WaveForm, phase: f64) -> f64 {
+pub(crate) fn generate_sample(waveform: &WaveForm, phase: f64) -> f64 {
     match waveform {
         // equations
         WaveForm::Sine => (phase * 2.0 * PI).sin(),
