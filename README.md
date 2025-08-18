@@ -40,14 +40,14 @@ If you hear a beep for 3 seconds, and if you see a `test.wav` file in your src f
 
 To make a custom song, you can try the following.
 ```Rust
-//! let mut song = Song::new(vec![
-//! Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
-//! Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Square },
-//! Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
-//! Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Triangle },
-//! ], BPMChoice::Default);
-//! 
-//! song.play();
+let mut song = Song::new(vec![
+Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
+Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Square },
+Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
+Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Triangle },
+], BPMChoice::Default);
+
+song.play();
 ```
 
 BPMChoice is an enum for picking beats per minute. Try adjusting it by using BPMChoice::Custom(number).
