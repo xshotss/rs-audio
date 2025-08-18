@@ -5,22 +5,22 @@ use rodio::{Decoder, OutputStream, Sink};
 
 use crate::{waveform::generate_sample, Song};
 
-
 impl Song {
-/**
-     Exports a Song struct to a .wav file.<br>It creates a .wav file in the current directory.<br>
-     Usage:
-     ```
-     let song = Song::default();
-     
-     song.export_to_wav("test.wav");
-     ```
-     */
+    /**
+    Exports a Song struct to a .wav file.<br>It creates a .wav file in the current directory.<br>
+    Usage:
+    ```
+    use rs_audio::*;
+
+    let song = Song::default();
+    song.export_to_wav("test.wav".to_string());
+    ```
+    */
     pub fn export_to_wav(&self, filename: String) -> Result<(), Box<dyn std::error::Error>> {
         // set up wave file specs
         let spec = WavSpec {
             channels: 1,
-            sample_rate: 44100, // 44.1k Hz
+            sample_rate: 44100,  // 44.1k Hz
             bits_per_sample: 16, // 16 bit depth
             sample_format: hound::SampleFormat::Int,
         };
@@ -45,18 +45,16 @@ impl Song {
 
         writer.finalize()?;
 
-
         Ok(())
     }
-
 
     pub fn play_wav(file_path: &str) {
         let (_stream, handle) = OutputStream::try_default().unwrap();
         let sink = Sink::try_new(&handle).unwrap();
-    
+
         let file = File::open(file_path).unwrap();
         let source = Decoder::new(BufReader::new(file)).unwrap();
-    
+
         sink.append(source);
         sink.sleep_until_end(); // Blocks until finished
     }
