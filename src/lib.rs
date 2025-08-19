@@ -49,10 +49,11 @@ song.play_from_thread().unwrap();
 
 pub(crate) mod assets;
 pub mod note;
-pub mod player;
+pub mod basicplayer;
+pub mod advancedplayer;
 pub mod wav;
 pub mod waveform;
 
 pub use note::Note;
-pub use player::{BPMChoice, Song};
+pub use basicplayer::{BPMChoice, Song};
 pub use waveform::WaveForm;

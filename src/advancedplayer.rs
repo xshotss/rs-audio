@@ -13,7 +13,7 @@ pub struct AudioManager {
 }
 
 pub enum AudioCommand {
-    Play(Vec<Note>), // Send notes to play
+    Play(Vec<Note>), // send notes to play
     Stop,
     SetVolume(f32),
 }
@@ -22,12 +22,12 @@ impl AudioManager {
     pub fn new() -> Self {
         let (tx, rx) = mpsc::channel();
         
-        // Spawn the dedicated audio thread
+        // spawn the dedicated audio thread
         thread::spawn(move || {
             let (_stream, handle) = OutputStream::try_default().unwrap();
             let sink = Sink::try_new(&handle).unwrap();
             
-            // Audio thread loop
+            // audio thread loop
             while let Ok(command) = rx.recv() {
                 match command {
                     AudioCommand::Play(notes) => {

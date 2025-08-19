@@ -23,14 +23,6 @@ pub enum BPMChoice {
     Custom(u32),
 }
 
-impl BPMChoice {
-    fn to_u32(&self) -> u32 {
-        match self {
-            BPMChoice::Default => 120,
-            BPMChoice::Custom(n) => *n,
-        }
-    }
-}
 
 /**
 Songs are collections of Notes. Each song can export to a .wav file.<br>
@@ -57,7 +49,7 @@ second_song.export_to_wav("test.wav".to_string());
 pub struct Song {
     pub notes: Vec<Note>,
 
-    pub bpm: u32, // beats per minute
+    pub bpm: BPMChoice, // beats per minute
 }
 
 impl Default for Song {
@@ -73,7 +65,7 @@ impl Default for Song {
     fn default() -> Self {
         Song {
             notes: vec![Note::default()],
-            bpm: 120,
+            bpm: BPMChoice::Default,
         }
     }
 }
@@ -82,13 +74,13 @@ impl Song {
     pub fn new(notes: Vec<Note>, bpm: BPMChoice) -> Self {
         Song {
             notes,
-            bpm: bpm.to_u32(),
+            bpm,
         }
     }
 
     pub fn play(&mut self) -> Result<(), Error> {
-        let mut volume_warning_given: bool = false; /*
-                                                    if the volume warning has been given (this is for volume warnings with sine waves) */
+        let mut volume_warning_given: bool = false;
+        // if the volume warning has been given (this is for volume warnings with sine waves) 
 
         // creates stream and sink (audio mixer)
         let (_stream, handle) = match OutputStream::try_default() {
@@ -160,57 +152,6 @@ impl Song {
         }
 
         sink.sleep_until_end();
-        Ok(())
-    }
-
-    /**
-    Plays a Song struct from a separate thread.<br>
-    This is much more efficient as it means that you can do other tasks while playing the song.<br>
-    It is recommended to use this instead of `.play()` if you want to do other tasks while playing the song.<br>
-
-    **NOTE**: This feature does not have warnings for notes whose volume is over 0.20.<br> Please ensure your notes
-    are at 0.20 volume or less.<br>
-
-    ## Usage:
-    ```
-    use rs_audio::*;
-
-    let song = Song::default();
-    song.play_from_thread().unwrap();
-    ```
-
-    */
-    pub fn play_from_thread(&mut self) -> Result<(), Error> {
-        // extract the notes we need before moving into the thread
-        let notes = std::mem::take(&mut self.notes); // takes ownership of the vec
-
-        std::thread::spawn(move || {
-            let (_stream, handle) = match OutputStream::try_default() {
-                Ok(e) => e,
-                Err(e) => return Err(Error::other(e.to_string())),
-            };
-
-            let sink = match Sink::try_new(&handle) {
-                Ok(e) => e,
-                Err(e) => return Err(Error::other(e.to_string())),
-            };
-
-            for note in notes {
-                let converted = match note.wave {
-                    WaveForm::Sine => SineWave::new(note.freq as f32),
-                    _ => note.to_approx_sine(),
-                }
-                .take_duration(Duration::from_secs_f64(note.dur))
-                .amplify(note.vol);
-
-                sink.append(converted);
-            }
-
-            sink.sleep_until_end();
-
-            Ok(())
-        });
-
         Ok(())
     }
 }
