@@ -39,14 +39,12 @@ This priject has recently moved to a new version. Due to drastic changes, I have
 This should do for now.
 */
 
-pub(crate) mod assets;
-pub mod legacyplayer;
+
 pub mod note;
 pub mod player;
 pub mod wav;
 pub mod waveform;
 
-pub use legacyplayer::BasicSong;
 pub use note::Note;
 pub use player::{AudioManager, Song};
 pub use waveform::WaveForm;

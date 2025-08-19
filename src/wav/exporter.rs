@@ -6,15 +6,13 @@ use std::{
 use hound::{WavSpec, WavWriter};
 use rodio::{Decoder, OutputStream, Sink};
 
-use crate::{waveform::generate_sample, BasicSong};
+use crate::{waveform::generate_sample, Song};
 
-impl BasicSong {
+
+
+impl Song {
     /**
-    # Deprecated
-    This feature has been deprecated in the latest update. Please use the new player, not the legacy one.<br><br>
-
-
-    Exports a Song struct to a .wav file.<br>It creates a .wav file in the current directory.<br>
+    Exports a Song struct to a .wav file.<br>
     Usage:
     ```
     use rs_audio::*;
@@ -23,6 +21,9 @@ impl BasicSong {
     let song = BasicSong::default();
     song.export_to_wav("test.wav".to_string());
     ```
+
+    # Panics
+    This function will panic if the file could not be created due to some error.
     */
     pub fn export_to_wav(&self, filename: String) -> Result<(), Box<dyn std::error::Error>> {
         // set up wave file specs
@@ -37,8 +38,7 @@ impl BasicSong {
         let mut writer = match WavWriter::create(filename, spec) {
             Ok(e) => e,
             Err(e) => {
-                eprintln!("RS-AUDIO: Error while creating file: {e}");
-                std::process::exit(1);
+                panic!("RS-AUDIO: Error while creating file: {e}");
             }
         };
 
@@ -57,23 +57,36 @@ impl BasicSong {
     }
 
     /**
-    # Deprecated
-    This feature has been deprecated in the latest update. Please use the new player, not the legacy one.<br><br>
-
-    Plays a .wav file.<br><br>
+    Plays a .wav file directly.<br>
+    Note that `.wav`'s are not converted to Songs in this function due to complexity.
+    <br>
 
 
     Usage:
     ```
     use rs_audio::*;
-    use rs_audio::{legacyplayer::BasicSong};
+    use rs_audio::{player::Song};
 
-    BasicSong::play_wav("test.wav").unwrap();
+    Song::play_wav("test.wav").unwrap();
     ```
 
+    **This function will return an Error if it encounters an error.<br>**
+    The recommended way to use it is the following:
+    ```
+    match Song::play_wav("test.wav") {
+        Ok(_) => (),
+        Err(e) => {
+            eprintln!("Error: {e}");
+            std::process::exit(1);
+        }
+    }
+    ```
     */
     pub fn play_wav(file_path: &str) -> Result<(), Error> {
-        let (_stream, handle) = OutputStream::try_default().unwrap();
+        let (_stream, handle) = match OutputStream::try_default() {
+            Ok(e) => e,
+            Err(e) => return Err(Error::other(e.to_string())),
+        };
 
         let sink = match Sink::try_new(&handle) {
             Ok(e) => e,
@@ -83,7 +96,11 @@ impl BasicSong {
         };
 
         let file = File::open(file_path)?;
-        let source = Decoder::new(BufReader::new(file)).unwrap();
+
+        let source = match Decoder::new(BufReader::new(file)) {
+            Ok(e) => e,
+            Err(e) => return Err(Error::other(e.to_string()))
+        };
 
         sink.append(source);
         sink.sleep_until_end(); // blocks thread until finished
