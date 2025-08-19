@@ -36,7 +36,7 @@ audio_manager.play(song);
 
 # NOTE
 This priject has recently moved to a new version. Due to drastic changes, I have started rewriting all documentation.<br>
-This should do for now.
+So some documentation may not be precise enough or just bad. Please report bad documentation to the GitHub repository.
 */
 
 
