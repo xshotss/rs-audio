@@ -18,6 +18,7 @@ Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Triangle },
 ], BPMChoice::Default);
 ```
 */
+#[derive(Debug, Clone)]
 pub enum BPMChoice {
     Default,
     Custom(u32),
@@ -46,13 +47,13 @@ second_song.play_from_thread().unwrap(); // Multithreaded (allows you to do othe
 second_song.export_to_wav("test.wav".to_string());
 ```
 */
-pub struct Song {
+pub struct BasicSong {
     pub notes: Vec<Note>,
 
     pub bpm: BPMChoice, // beats per minute
 }
 
-impl Default for Song {
+impl Default for BasicSong {
     /**
     Creates a default song that is useful for debugging purposes.<br><br>
     It contains a single default sine wave.<br>
@@ -63,16 +64,16 @@ impl Default for Song {
     ```
     */
     fn default() -> Self {
-        Song {
+        BasicSong {
             notes: vec![Note::default()],
             bpm: BPMChoice::Default,
         }
     }
 }
 
-impl Song {
+impl BasicSong {
     pub fn new(notes: Vec<Note>, bpm: BPMChoice) -> Self {
-        Song {
+        BasicSong {
             notes,
             bpm,
         }
