@@ -1,11 +1,9 @@
 use crate::assets::loader::load_asset;
-use crate::BPMChoice;
 use crate::note::Note;
 use crate::waveform::WaveForm;
+use crate::BPMChoice;
 use rodio::{source::SineWave, OutputStream, Sink, Source};
 use std::{io::Error, time::Duration};
-
-
 
 /**
 # Deprecated
@@ -61,15 +59,12 @@ impl Default for BasicSong {
 
 impl BasicSong {
     pub fn new(notes: Vec<Note>, bpm: BPMChoice) -> Self {
-        BasicSong {
-            notes,
-            bpm,
-        }
+        BasicSong { notes, bpm }
     }
 
     pub fn play(&mut self) -> Result<(), Error> {
         let mut volume_warning_given: bool = false;
-        // if the volume warning has been given (this is for volume warnings with sine waves) 
+        // if the volume warning has been given (this is for volume warnings with sine waves)
 
         // creates stream and sink (audio mixer)
         let (_stream, handle) = match OutputStream::try_default() {

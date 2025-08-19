@@ -1,7 +1,7 @@
 /*!
 # RS-AUDIO
 rs-audio is a Rust library for making retro music programmatically.<br>
-  Currently, it has support for: 
+  Currently, it has support for:
   * Sine waves,
   * Squares,
   * Sawtooths,
@@ -40,19 +40,17 @@ This should do for now.
 */
 
 pub(crate) mod assets;
-pub mod note;
 pub mod legacyplayer;
+pub mod note;
 pub mod player;
 pub mod wav;
 pub mod waveform;
 
-pub use BPMChoice::*;
-pub use note::Note;
 pub use legacyplayer::BasicSong;
+pub use note::Note;
+pub use player::{AudioManager, Song};
 pub use waveform::WaveForm;
-pub use player::{Song, AudioManager};
-
-
+pub use BPMChoice::*;
 
 /**
 The BPMChoice is an enum for picking the <b>beats per minute</b> for making songs.<br>
