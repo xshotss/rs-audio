@@ -49,7 +49,7 @@ impl Default for Note {
 }
 
 impl Note {
-    pub fn to_approx_sine(&self) -> SineWave {
+    pub(crate) fn to_approx_sine(&self) -> SineWave {
         /*
         this emulates sines, squares, sawtooths and triangles as rodio sine waves
         it's not extremely accurate but it works
