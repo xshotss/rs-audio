@@ -1,8 +1,7 @@
 use std::f64::consts::PI;
 
 /**
-This enum is used for declaring waveform types.<br><br>
-NOTE: Only the sine wave is currently implemented.
+This enum is used for declaring waveform types.<br>
 */
 #[derive(Clone, PartialEq)]
 pub enum WaveForm {

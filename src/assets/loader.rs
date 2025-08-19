@@ -1,8 +1,10 @@
-/// Loads a bundled asset (ASCII art, text or JSON (`coming soon`)) that's compiled into the binary.
-/// 
-/// # Panics
-/// Panics if the asset name is invalid (should never happen in release builds).<br>
-/// If this happens please report it at the GitHub repository.
+/**
+Loads a bundled asset (ASCII art, text or JSON (`coming soon`)) that's compiled into the binary.
+
+# Panics
+Panics if the asset name is invalid (should never happen in release builds).<br>
+If this happens please report it at the GitHub repository.
+*/
 pub fn load_asset(filename: &str) -> &'static str {
     match filename {
         // loads assets

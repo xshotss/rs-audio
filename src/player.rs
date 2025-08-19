@@ -40,7 +40,7 @@ Example:
 use rs_audio::*;
 
 let mut song = Song::default();
-song.play();
+song.play().unwrap();
 
 let mut second_song = Song::new(vec![
 Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
