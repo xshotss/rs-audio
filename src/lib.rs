@@ -14,12 +14,15 @@ To create a default song (to make sure everything is working):
 ```
 use rs_audio::*;
 
-let mut song = Song::default();
-song.play().unwrap();
+let mut audio_manager = AudioManager::new(); // This creates an audio thread which handles audio.
+
+audio_manager.play(Song::default()); // Plays a default song.
 ```
 <br>To create custom notes:
 ```
 use rs_audio::*;
+
+let mut audio_manager = AudioManager::new();
 
 let mut song = Song::new(vec![
 Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
@@ -28,32 +31,21 @@ Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
 Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Triangle },
 ], BPMChoice::Default);
 
-song.play().unwrap();
+audio_manager.play(song);
 ```
 
-# Multithreading
-
-To use a separate thread for playing songs, you need to use the following function.<br>
-Multithreading means that you can perform other tasks while playing music.<br><br>
-
-## Usage
-```
-use rs_audio::*;
-
-let mut song = Song::default();
-song.play_from_thread().unwrap();
-```
-
-
+# NOTE
+This priject has recently moved to a new version. Due to drastic changes, I have started rewriting all documentation.<br>
+This should do for now.
 */
 
 pub(crate) mod assets;
 pub mod note;
-pub mod basicplayer;
-pub mod advancedplayer;
+pub mod legacyplayer;
+pub mod player;
 pub mod wav;
 pub mod waveform;
 
 pub use note::Note;
-pub use basicplayer::{BPMChoice, Song};
+pub use legacyplayer::{BPMChoice, BasicSong};
 pub use waveform::WaveForm;
