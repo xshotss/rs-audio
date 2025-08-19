@@ -1,1 +1,1 @@
-pub mod loader;
+pub(crate) mod loader;
