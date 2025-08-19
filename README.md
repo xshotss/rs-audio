@@ -26,11 +26,11 @@ use rs_audio::*;
 To make sure that everything is working, add this to your main() function:
 ```Rust
 fn main() {
-  let mut song = Song::default(); // Creates a default song with a single sine wave. It is useful for debugging.
+  let mut amngr = AudioManager::new(); // Creates a thread for audio.
 
-  song.play().unwrap(); // Plays the song. This pauses the main thread until the song is finished.
-
-  song.export_to_wav("test.wav".to_string()).unwrap(); // Creates a .wav file containing your song.
+  let _ = amngr.play(Song::default()); // This plays the default song for debugging.
+  // We used "let _ =" to discard the value of play() as it returns the track_id for our track.
+  // You can use the track id to control what the Audio Manager does to the song.
 }
 ```
 
@@ -49,31 +49,14 @@ Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
 Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Triangle },
 ], BPMChoice::Default);
 
-song.play().unwrap();
+amngr.play(song); // Make sure you have an audio manager set up.
 ```
 
 BPMChoice is an enum for picking beats per minute. Try adjusting it by using BPMChoice::Custom(number).
 Adjust the frequencies, volumes, waves, add more notes, etc... as you like!
 
-You can export a song to a .wav file using the "export_to_wav" function
-```Rust
-song.export_to_wav("helloworld.wav".to_string()).unwrap();
-```
-
-You can also play a .wav file directly:
-```Rust
-play_wav("test.wav").unwrap();
-```
-
-
-### Multithreading
-Multithreading allows you to run multiple tasks at once. Rs-audio has native multithreading support using the following command:
-```Rust
-song.play_from_thread().unwrap();
-```
-
-This allows you to do stuff on the main/other thread like rendering, physics, calculations, etc... while still playing audio!
-**Note that this feature is quite new and has not recieved much testing yet.**
+# NOTE (VERY IMPORTANT)
+This project has undergone a massive version change. A lot of changes have happened, including a new project structure, a much more robust system, and much more. The documentation for this library is incomplete, as it is currently being worked on.
 
 
 ## License
