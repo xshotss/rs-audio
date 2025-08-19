@@ -1,28 +1,10 @@
 use crate::assets::loader::load_asset;
+use crate::BPMChoice;
 use crate::note::Note;
 use crate::waveform::WaveForm;
 use rodio::{source::SineWave, OutputStream, Sink, Source};
 use std::{io::Error, time::Duration};
 
-/**
-The BPMChoice is an enum for picking the <b>beats per minute</b> for making songs.<br>
-Usage:
-```
-use rs_audio::*;
-
-let song = Song::new(vec![
-Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
-Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Square },
-Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
-Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Triangle },
-], BPMChoice::Default);
-```
-*/
-#[derive(Debug, Clone)]
-pub enum BPMChoice {
-    Default,
-    Custom(u32),
-}
 
 
 /**
@@ -33,7 +15,7 @@ Basic songs are collections of Notes. Each song can export to a .wav file.<br>
 
 Example:
 ```
-use rs_audio::*;
+use rs_audio::{BasicSong, Note, BPMChoice};
 
 let mut song = BasicSong::default();
 song.play().unwrap();
@@ -65,8 +47,8 @@ impl Default for BasicSong {
     It contains a single default sine wave.<br>
     Usage:
     ```
-    use rs_audio::*;
-    let song = Song::default();
+    use rs_audio::{BasicSong, Note, BPMChoice};
+    let song = BasicSong::default();
     ```
     */
     fn default() -> Self {
