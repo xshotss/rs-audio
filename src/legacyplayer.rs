@@ -26,24 +26,26 @@ pub enum BPMChoice {
 
 
 /**
-Songs are collections of Notes. Each song can export to a .wav file.<br>
+# Deprecated
+This feature has been deprecated in the latest update. Please use the new player, not the legacy one.<br><br>
+
+Basic songs are collections of Notes. Each song can export to a .wav file.<br>
 
 Example:
 ```
 use rs_audio::*;
 
-let mut song = Song::default();
+let mut song = BasicSong::default();
 song.play().unwrap();
 
-let mut second_song = Song::new(vec![
+let mut second_song = BasicSong::new(vec![
 Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
 Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Square },
 Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },
 Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Triangle },
 ], BPMChoice::Default);
 
-second_song.play().unwrap(); // Uses the main thread
-second_song.play_from_thread().unwrap(); // Multithreaded (allows you to do other stuff while the music is playing.)
+second_song.play().unwrap(); // Uses the main thread.
 second_song.export_to_wav("test.wav".to_string());
 ```
 */
@@ -55,6 +57,10 @@ pub struct BasicSong {
 
 impl Default for BasicSong {
     /**
+    # Deprecated
+    This feature has been deprecated in the latest update. Please use the new player, not the legacy one.<br><br>
+
+
     Creates a default song that is useful for debugging purposes.<br><br>
     It contains a single default sine wave.<br>
     Usage:

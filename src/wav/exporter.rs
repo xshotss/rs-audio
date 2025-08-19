@@ -6,16 +6,20 @@ use std::{
 use hound::{WavSpec, WavWriter};
 use rodio::{Decoder, OutputStream, Sink};
 
-use crate::{waveform::generate_sample, Song};
+use crate::{waveform::generate_sample, BasicSong};
 
-impl Song {
+impl BasicSong {
     /**
+    # Deprecated
+    This feature has been deprecated in the latest update. Please use the new player, not the legacy one.<br><br>
+
+
     Exports a Song struct to a .wav file.<br>It creates a .wav file in the current directory.<br>
     Usage:
     ```
     use rs_audio::*;
 
-    let song = Song::default();
+    let song = BasicSong::default();
     song.export_to_wav("test.wav".to_string());
     ```
     */
@@ -52,6 +56,9 @@ impl Song {
     }
 
     /**
+    # Deprecated
+    This feature has been deprecated in the latest update. Please use the new player, not the legacy one.<br><br>
+
     Plays a .wav file.<br><br>
 
 
