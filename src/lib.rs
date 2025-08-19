@@ -12,7 +12,7 @@ This library is MIT licensed. <br>Learn more in our repository: <https://github.
 
 To create a default song (to make sure everything is working):
 ```
-use rs_audio::{AudioManager, Song, Note, BPMChoice};
+use rs_audio::*;
 
 let mut audio_manager = AudioManager::new(); // This creates an audio thread which handles audio.
 
@@ -20,7 +20,7 @@ audio_manager.play(Song::default()); // Plays a default song.
 ```
 <br>To create custom notes:
 ```
-use rs_audio::{AudioManager, Song, Note, BPMChoice};
+use rs_audio::*;
 
 let mut audio_manager = AudioManager::new();
 
@@ -46,6 +46,7 @@ pub mod player;
 pub mod wav;
 pub mod waveform;
 
+pub use BPMChoice::*;
 pub use note::Note;
 pub use legacyplayer::BasicSong;
 pub use waveform::WaveForm;
@@ -57,7 +58,7 @@ pub use player::{Song, AudioManager};
 The BPMChoice is an enum for picking the <b>beats per minute</b> for making songs.<br>
 Usage:
 ```
-use rs_audio::{AudioManager, Song, Note, BPMChoice};
+use rs_audio::*;
 
 let song = Song::new(vec![
 Note { freq: 880.0, dur: 1.0, vol: 0.20, wave: WaveForm::Sine },

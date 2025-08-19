@@ -18,6 +18,7 @@ impl BasicSong {
     Usage:
     ```
     use rs_audio::*;
+    use rs_audio::{legacyplayer::BasicSong};
 
     let song = BasicSong::default();
     song.export_to_wav("test.wav".to_string());
@@ -65,8 +66,9 @@ impl BasicSong {
     Usage:
     ```
     use rs_audio::*;
+    use rs_audio::{legacyplayer::BasicSong};
 
-    play_wav("test.wav").unwrap();
+    BasicSong::play_wav("test.wav").unwrap();
     ```
 
     */

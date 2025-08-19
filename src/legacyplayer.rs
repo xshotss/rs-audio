@@ -15,7 +15,7 @@ Basic songs are collections of Notes. Each song can export to a .wav file.<br>
 
 Example:
 ```
-use rs_audio::{BasicSong, Note, BPMChoice};
+use rs_audio::*;
 
 let mut song = BasicSong::default();
 song.play().unwrap();
@@ -47,7 +47,7 @@ impl Default for BasicSong {
     It contains a single default sine wave.<br>
     Usage:
     ```
-    use rs_audio::{BasicSong, Note, BPMChoice};
+    use rs_audio::*;
     let song = BasicSong::default();
     ```
     */
