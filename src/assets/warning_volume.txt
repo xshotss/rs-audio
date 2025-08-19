@@ -1,5 +1,0 @@
-RS-AUDIO: One of your notes is a sine wave and has a volume that is more than 0.20.\n
-This could be dangerous as sine waves are extremely loud.\n Do you wish to proceed?\n
-Continue (not recommended): c\n
-Abort (use defalt): a\n
-Use default (uses 0.20 volume): d OR just press enter\n"
