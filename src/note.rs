@@ -18,7 +18,7 @@ let note: Note = Note {
 let default_note = Note::default(); // This outputs the same note as the one above.
 ```
 */
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Note {
     pub freq: f64, // frequency in hertz
     pub dur: f64,  // duration in seconds
