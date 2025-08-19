@@ -2,7 +2,7 @@ use crate::assets::loader::load_asset;
 use crate::note::Note;
 use crate::waveform::WaveForm;
 use rodio::{source::SineWave, OutputStream, Sink, Source};
-use std::{io::{Error, ErrorKind}, time::Duration};
+use std::{io::Error, time::Duration};
 
 /**
 The BPMChoice is an enum for picking the <b>beats per minute</b> for making songs.<br>
@@ -88,24 +88,18 @@ impl Song {
 
     pub fn play(&mut self) -> Result<(), Error> {
         let mut volume_warning_given: bool = false; /*
-            if the volume warning has been given (this is for volume warnings with sine waves) */
+                                                    if the volume warning has been given (this is for volume warnings with sine waves) */
 
         // creates stream and sink (audio mixer)
         let (_stream, handle) = match OutputStream::try_default() {
             Ok(e) => e,
-            Err(e) => {
-                return Err(Error::new(ErrorKind::Other, e.to_string()))
-            }
+            Err(e) => return Err(Error::other(e.to_string())),
         };
-
 
         let sink = match Sink::try_new(&handle) {
             Ok(e) => e,
-            Err(e) => {
-                return Err(Error::new(ErrorKind::Other, e.to_string()))
-            }
+            Err(e) => return Err(Error::other(e.to_string())),
         };
-
 
         // iterates over the notes
         for note in &mut self.notes {
@@ -184,30 +178,24 @@ impl Song {
     let song = Song::default();
     song.play_from_thread().unwrap();
     ```
-    
+
     */
-    pub fn play_from_thread(&mut self) -> Result<(), Error>{
+    pub fn play_from_thread(&mut self) -> Result<(), Error> {
         // extract the notes we need before moving into the thread
         let notes = std::mem::take(&mut self.notes); // takes ownership of the vec
-        
-    
+
         std::thread::spawn(move || {
             let (_stream, handle) = match OutputStream::try_default() {
                 Ok(e) => e,
-                Err(e) => {
-                    return Err(Error::new(ErrorKind::Other, e.to_string()))
-                }
+                Err(e) => return Err(Error::other(e.to_string())),
             };
-
 
             let sink = match Sink::try_new(&handle) {
                 Ok(e) => e,
-                Err(e) => {
-                    return Err(Error::new(ErrorKind::Other, e.to_string()))
-                }
+                Err(e) => return Err(Error::other(e.to_string())),
             };
-        
-            for note in notes { 
+
+            for note in notes {
                 let converted = match note.wave {
                     WaveForm::Sine => SineWave::new(note.freq as f32),
                     _ => note.to_approx_sine(),
@@ -217,7 +205,7 @@ impl Song {
 
                 sink.append(converted);
             }
-        
+
             sink.sleep_until_end();
 
             Ok(())
@@ -225,6 +213,4 @@ impl Song {
 
         Ok(())
     }
-
-
 }
