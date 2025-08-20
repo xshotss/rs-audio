@@ -1,4 +1,24 @@
-//! hello
+/*!
+The devices module's purpose is to make interacting with audio devices easier.<br>
+You can use it to check all devices and check if the user has a valid output device.<br><br>
+
+# Usage
+A simple program using this module:
+```
+use rs_audio::misc::devices::*;
+
+fn main() {
+    if !has_valid_device() {
+        eprintln!("No valid audio output device detected!");
+        std::process::exit(1);
+    }
+
+    for (key, device) in all_devices().iter().enumerate() {
+        println!("{}: {}", key, device.name())
+    }
+}
+```
+*/
 
 
 use rodio::{cpal::traits::HostTrait, Device};
@@ -26,7 +46,7 @@ pub fn has_valid_device() -> bool {
     let host = rodio::cpal::default_host();
 
     if let Ok(_) = host.output_devices() {
-        return true
+        return true;
     }
     false
 }
@@ -34,7 +54,7 @@ pub fn has_valid_device() -> bool {
 
 /**
 Finds the default host's devices and outputs a vector of `Device` structs.<br>
-Note that this relies on `cpal`.
+Note that this relies on `cpal`.<br>
 
 # Panics
 This function will panic if it cannot find any output device.<br>
