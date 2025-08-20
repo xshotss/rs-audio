@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::io::Error;
 use std::thread;
 use std::{sync::mpsc, time::Duration};
 
@@ -7,7 +8,7 @@ use rodio::{OutputStream, Sink, Source};
 
 use crate::{BPMChoice, Note, WaveForm};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct Song {
     pub bpm: BPMChoice,
     pub notes: Vec<Note>,
@@ -25,6 +26,20 @@ impl Default for Song {
             bpm: BPMChoice::Default,
             notes: vec![Note::default()],
         }
+    }
+}
+
+impl Song {
+    pub fn save_to_json(song: &Song, filename: &str) -> Result<(), Error> {
+        let json = serde_json::to_string_pretty(song)?;
+        std::fs::write(filename, json)?;
+        Ok(())
+    }
+
+    pub fn load_from_json(filename: &str) -> Result<Song, Error> {
+        let json = std::fs::read_to_string(filename)?;
+        let song = serde_json::from_str(&json)?;
+        Ok(song)
     }
 }
 
