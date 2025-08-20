@@ -8,17 +8,15 @@ use rodio::{Decoder, OutputStream, Sink};
 
 use crate::{waveform::generate_sample, Song};
 
-
-
 impl Song {
     /**
     Exports a Song struct to a .wav file.<br>
     Usage:
     ```
     use rs_audio::*;
-    use rs_audio::{legacyplayer::BasicSong};
+    use rs_audio::{player::Song};
 
-    let song = BasicSong::default();
+    let song = Song::default();
     song.export_to_wav("test.wav".to_string());
     ```
 
@@ -73,6 +71,9 @@ impl Song {
     **This function will return an Error if it encounters an error.<br>**
     The recommended way to use it is the following:
     ```
+    use rs_audio::*;
+    use rs_audio::{player::Song};
+
     match Song::play_wav("test.wav") {
         Ok(_) => (),
         Err(e) => {
@@ -99,7 +100,7 @@ impl Song {
 
         let source = match Decoder::new(BufReader::new(file)) {
             Ok(e) => e,
-            Err(e) => return Err(Error::other(e.to_string()))
+            Err(e) => return Err(Error::other(e.to_string())),
         };
 
         sink.append(source);
