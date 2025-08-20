@@ -64,7 +64,7 @@ Note { freq: 220.0, dur: 1.0, vol: 0.20, wave: WaveForm::Triangle },
 ], BPMChoice::Default);
 ```
 */
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize, Copy)]
 pub enum BPMChoice {
     Default,
     Custom(u32),
