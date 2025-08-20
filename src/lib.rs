@@ -43,6 +43,7 @@ pub mod note;
 pub mod player;
 pub mod wav;
 pub mod waveform;
+pub mod misc;
 
 pub use note::Note;
 pub use player::{AudioManager, Song};
