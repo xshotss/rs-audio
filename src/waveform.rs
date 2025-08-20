@@ -3,7 +3,7 @@ use std::f64::consts::PI;
 /**
 This enum is used for declaring waveform types.<br>
 */
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, Copy, PartialEq, Debug, serde::Deserialize, serde::Serialize)]
 pub enum WaveForm {
     Sine,
     Square,
