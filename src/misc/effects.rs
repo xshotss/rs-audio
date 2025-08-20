@@ -34,9 +34,9 @@ pub fn reverse(song: &Song) -> Song {
 }
 
 pub fn speed_up(song: &Song, factor: f64) -> Song {
-    let sped_notes: Vec<Note> = song.notes.iter()
+    let speed_notes: Vec<Note> = song.notes.iter()
         .map(|note| Note { dur: note.dur / factor, ..*note })
         .collect();
     
-    Song::new(sped_notes, song.bpm)
+    Song::new(speed_notes, song.bpm)
 }
