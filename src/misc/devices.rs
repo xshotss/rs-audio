@@ -7,16 +7,16 @@ A simple program using this module:
 ```
 use rs_audio::misc::devices::*;
 
-fn main() {
-    if !has_valid_device() {
-        eprintln!("No valid audio output device detected!");
-        std::process::exit(1);
-    }
 
-    for (key, device) in all_devices().iter().enumerate() {
-        println!("{}: {}", key, device.name())
-    }
+if !has_valid_device() {
+    eprintln!("No valid audio output device detected!");
+    std::process::exit(1);
 }
+
+for (key, device) in all_devices().iter().enumerate() {
+    println!("{}: {}", key, device.name())
+}
+
 ```
 */
 
