@@ -1,5 +1,5 @@
 /*!
-The effects module is useful for applying various effects to songs, without doign them manually.<br>
+The effects module is useful for applying various effects to songs, without doing them manually.<br>
 **Note**: This feature is still underdevelopment.
 */
 
