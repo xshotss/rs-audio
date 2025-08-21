@@ -39,11 +39,11 @@ This priject has recently moved to a new version. Due to drastic changes, I have
 So some documentation may not be precise enough or just bad. Please report bad documentation to the GitHub repository.
 */
 
+pub mod misc;
 pub mod note;
 pub mod player;
 pub mod wav;
 pub mod waveform;
-pub mod misc;
 
 pub use note::Note;
 pub use player::{AudioManager, Song};

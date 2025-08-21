@@ -20,10 +20,7 @@ for (key, device) in all_devices().iter().enumerate() {
 ```
 */
 
-
 use rodio::{cpal::traits::HostTrait, Device};
-
-
 
 /**
 Checks if the host has a valid output device (ie. headphones, speakers, etc...).<br><br>
@@ -50,7 +47,6 @@ pub fn has_valid_device() -> bool {
     }
     false
 }
-
 
 /**
 Finds the default host's devices and outputs a vector of `Device` structs.<br>
