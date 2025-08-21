@@ -45,7 +45,7 @@ pub fn has_valid_device() -> bool {
     // finds the default host
     let host = rodio::cpal::default_host();
 
-    if let Ok(_) = host.output_devices() {
+    if host.output_devices().is_ok() {
         return true;
     }
     false
