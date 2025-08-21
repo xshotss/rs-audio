@@ -56,6 +56,12 @@ pub enum AudioCommand {
     StopAll,
 }
 
+impl Default for AudioManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AudioManager {
     pub fn new() -> Self {
         let (tx, rx) = mpsc::channel();
