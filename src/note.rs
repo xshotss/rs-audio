@@ -49,6 +49,24 @@ impl Default for Note {
 }
 
 impl Note {
+    /**
+    Creates a rest (silence) note.<br><br>
+    Usage:
+    ```
+    use rs_audio::*;
+    let rest_note = Note::rest(2.0); // a 2 second rest
+    ```
+    */
+    pub fn rest(dur: f64) -> Self {
+        Note {
+            freq: 0.0,
+            dur,
+            vol: 0.0,
+            wave: WaveForm::Rest,
+        }
+    }
+
+
     pub(crate) fn to_approx_sine(&self) -> SineWave {
         /*
         this emulates sines, squares, sawtooths and triangles as rodio sine waves
@@ -59,6 +77,7 @@ impl Note {
             WaveForm::Square => self.freq * 1.27, // adds odd harmonics
             WaveForm::Sawtooth => self.freq * 1.5, // rich harmonics
             WaveForm::Triangle => self.freq * 1.16, // soft harmonics
+            WaveForm::Rest => 0.0, // silence
         };
 
         SineWave::new(effective_freq as f32)

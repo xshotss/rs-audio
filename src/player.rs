@@ -82,6 +82,10 @@ impl AudioManager {
                         for note in song.notes {
                             let source = match note.wave {
                                 WaveForm::Sine => Box::new(SineWave::new(note.freq as f32)),
+                                WaveForm::Rest => {
+                                    std::thread::sleep(Duration::from_secs_f64(note.dur));
+                                    continue;
+                                }
                                 _ => Box::new(note.to_approx_sine()),
                             };
                             sink.append(
