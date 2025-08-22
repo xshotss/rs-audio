@@ -8,6 +8,15 @@ use rodio::{OutputStream, Sink, Source};
 
 use crate::{BPMChoice, Note, WaveForm};
 
+/** 
+This struct represents a song.<br>
+It contains a list of notes and a BPM (beats per minute) setting.<br><br>
+## Usage:
+```
+use rs_audio::*;
+let song = Song::default(); // creates a default song with one note (A4, 440Hz, 3 seconds, 0.20 volume, sine wave)
+```
+*/
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct Song {
     pub bpm: BPMChoice,
@@ -43,13 +52,33 @@ impl Song {
     }
 }
 
+/**
+This struct manages audio playback.<br>
+It allows playing multiple songs simultaneously, stopping them individually or all at once, and adjusting their volumes<br>
+It handles everything in a dedicated audio thread to ensure smooth playback and to not disrupt any other tasks.<br><br>
+## Usage:
+```
+use rs_audio::*;
+
+
+let mut audio_manager = AudioManager::new();
+
+let song = Song::default();
+
+let track_id = audio_manager.play(song); // play the song and get its track ID
+
+audio_manager.set_volume(track_id, 0.5); // set volume for this track
+audio_manager.stop(track_id); // stop this specific track
+audio_manager.stop_all(); // stop all tracks
+```
+*/
 pub struct AudioManager {
     tx: mpsc::Sender<AudioCommand>,
     next_track_id: usize,
 }
 
 #[derive(Debug, Clone)]
-pub enum AudioCommand {
+pub(crate) enum AudioCommand {
     PlayTrack { id: usize, song: Song },
     StopTrack(usize),
     SetVolume(usize, f32),
@@ -63,6 +92,16 @@ impl Default for AudioManager {
 }
 
 impl AudioManager {
+    /**
+    Creates a new AudioManager instance and starts the audio thread.<br>
+    This thread handles all audio playback and control.<br>
+    It uses channels to receive commands from the main thread.<br><br>
+    ## Usage:
+    ```
+    use rs_audio::*;
+    let mut audio_manager = AudioManager::new();
+    ```
+    */
     pub fn new() -> Self {
         let (tx, rx) = mpsc::channel();
         let mut _next_track_id = 0;
@@ -124,7 +163,7 @@ impl AudioManager {
             next_track_id: 0,
         }
     }
-
+    /// Plays a song and returns a unique track ID for later control (like stopping or adjusting volume).
     pub fn play(&mut self, song: Song) -> usize {
         let track_id = self.next_track_id;
         self.next_track_id += 1;
@@ -134,14 +173,17 @@ impl AudioManager {
         track_id // return ID for later control
     }
 
+    /// Stops a specific track using its track ID.
     pub fn stop(&self, track_id: usize) {
         let _ = self.tx.send(AudioCommand::StopTrack(track_id));
     }
 
+    /// Sets the volume for a specific track using its track ID.
     pub fn set_volume(&self, track_id: usize, volume: f32) {
         let _ = self.tx.send(AudioCommand::SetVolume(track_id, volume));
     }
 
+    /// Stops all currently playing tracks.
     pub fn stop_all(&self) {
         let _ = self.tx.send(AudioCommand::StopAll);
     }
