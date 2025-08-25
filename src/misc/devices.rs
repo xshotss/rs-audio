@@ -6,6 +6,7 @@ You can use it to check all devices and check if the user has a valid output dev
 A simple program using this module:
 ```
 use rs_audio::misc::devices::*;
+use rodio::DeviceTrait; // Note that you have to import the DeviceTrait from rodio for this to work.
 
 
 if !has_valid_device() {
@@ -13,8 +14,9 @@ if !has_valid_device() {
     std::process::exit(1);
 }
 
-for (key, device) in all_devices().iter().enumerate() {
-    println!("{}: {}", key, device.name())
+let all_devices = all_devices().unwrap();
+for (key, device) in all_devices.iter().enumerate() {
+    println!("{}: {:?}", key, device.name())
 }
 
 ```
@@ -50,20 +52,21 @@ pub fn has_valid_device() -> bool {
 
 /**
 Finds the default host's devices and outputs a vector of `Device` structs.<br>
-Note that this relies on `cpal`.<br>
+Note that this relies on `cpal`.<br> Also, this is not intended to be shown to the user.<br>
 
 # Panics
 This function will panic if it cannot find any output device.<br>
 It is recommended to pair this with the `has_valid_device()` function.
 ```
 use rs_audio::misc::devices::{has_valid_device, all_devices};
+use rodio::DeviceTrait; // Note that you have to import the DeviceTrait from rodio for this to work.
 
 if has_valid_device() {
-    let devices = all_devices();
+    let devices = all_devices().unwrap();
     // Do something with the devices here...
     // Simple example:
     for device in devices {
-        println!("{}", device.name());
+        println!("{:?}", device.name());
     }
 }
 ```

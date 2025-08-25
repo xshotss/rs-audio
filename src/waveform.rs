@@ -32,7 +32,7 @@ pub(crate) fn generate_sample(waveform: &WaveForm, phase: f64) -> f64 {
             } else {
                 1.0 - 4.0 * (phase - 0.5)
             }
-        },
+        }
         WaveForm::Rest => 0.0, // silence
     }
 }

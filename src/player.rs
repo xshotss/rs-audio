@@ -8,7 +8,7 @@ use rodio::{OutputStream, Sink, Source};
 
 use crate::{BPMChoice, Note, WaveForm};
 
-/** 
+/**
 This struct represents a song.<br>
 It contains a list of notes and a BPM (beats per minute) setting.<br><br>
 ## Usage:
@@ -49,21 +49,19 @@ impl Default for Song {
     }
 }
 
-
-
 impl Song {
     /**
     Saves a song to a JSON file. This can be useful if you want to save your songs somewhere.<br>
     Note that this can return an error if it fails to:<br>
     * Convert the song to JSON
     * Write to the file
-    <br><br>
+      <br><br>
     # Usage
     ```
     use rs_audio::*;
 
     let song = Song::default();
-    match save_to_json(song, "song.json") {
+    match Song::save_to_json(&song, "song.json") {
         Ok(_) => (),
         Err(e) => eprintln!("{}", e.to_string()),
     }
@@ -80,15 +78,18 @@ impl Song {
     Note that this will return an error if it fails to:<br>
     * Open the file (it may not exist or it could not read it)
     * Read from the file.
-    <br><br>
+      <br><br>
     # Usage
     ```
     use rs_audio::*;
 
-    let loaded_song = load_from_json("song.json") {
+    let loaded_song: Song = match Song::load_from_json("song.json") {
         Ok(s) => s,
-        Err(e) => eprintln!("{}", e.to_string())
-    }
+        Err(e) => {
+            eprintln!("{}", e.to_string());
+            std::process::exit(1);
+        }
+    };
     ```
     */
     pub fn load_from_json(filename: &str) -> Result<Song, Error> {
@@ -142,7 +143,7 @@ impl AudioManager {
     Creates a new AudioManager instance and starts the audio thread.<br>
     This thread handles all audio playback and control.<br>
     It uses channels to receive commands from the main thread.<br><br>
-    ## Usage:
+    # Usage:
     ```
     use rs_audio::*;
     let mut audio_manager = AudioManager::new();

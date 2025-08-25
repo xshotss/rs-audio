@@ -49,6 +49,7 @@ pub use note::Note;
 pub use player::{AudioManager, Song};
 pub use waveform::WaveForm;
 pub use BPMChoice::*;
+pub use rodio::cpal;
 
 /**
 The BPMChoice is an enum for picking the <b>beats per minute</b> for making songs.<br>

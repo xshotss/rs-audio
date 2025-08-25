@@ -66,7 +66,6 @@ impl Note {
         }
     }
 
-
     pub(crate) fn to_approx_sine(&self) -> SineWave {
         /*
         this emulates sines, squares, sawtooths and triangles as rodio sine waves
@@ -77,7 +76,7 @@ impl Note {
             WaveForm::Square => self.freq * 1.27, // adds odd harmonics
             WaveForm::Sawtooth => self.freq * 1.5, // rich harmonics
             WaveForm::Triangle => self.freq * 1.16, // soft harmonics
-            WaveForm::Rest => 0.0, // silence
+            WaveForm::Rest => 0.0,                // silence
         };
 
         SineWave::new(effective_freq as f32)
