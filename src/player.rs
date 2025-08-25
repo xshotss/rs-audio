@@ -30,6 +30,17 @@ impl Song {
 }
 
 impl Default for Song {
+    /**
+    Generates a default song that is useful for debugging purposes.<br>
+    It contains a single sine wave with a frequency of 440 Hz, lasts 3 seconds and has a volume of 0.20.<br>
+    It has a BPM of 120 (the default)<br><br>
+    # Usage
+    ```
+    use rs_audio::*;
+
+    let default_song = Song::default();
+    ```
+    */
     fn default() -> Self {
         Self {
             bpm: BPMChoice::Default,
@@ -38,13 +49,48 @@ impl Default for Song {
     }
 }
 
+
+
 impl Song {
+    /**
+    Saves a song to a JSON file. This can be useful if you want to save your songs somewhere.<br>
+    Note that this can return an error if it fails to:<br>
+    * Convert the song to JSON
+    * Write to the file
+    <br><br>
+    # Usage
+    ```
+    use rs_audio::*;
+
+    let song = Song::default();
+    match save_to_json(song, "song.json") {
+        Ok(_) => (),
+        Err(e) => eprintln!("{}", e.to_string()),
+    }
+    ```
+    */
     pub fn save_to_json(song: &Song, filename: &str) -> Result<(), Error> {
         let json = serde_json::to_string_pretty(song)?;
         std::fs::write(filename, json)?;
         Ok(())
     }
 
+    /**
+    Loads a Song struct from a JSON file. This can be useful if you want to load existing songs from JSONs.<br>
+    Note that this will return an error if it fails to:<br>
+    * Open the file (it may not exist or it could not read it)
+    * Read from the file.
+    <br><br>
+    # Usage
+    ```
+    use rs_audio::*;
+
+    let loaded_song = load_from_json("song.json") {
+        Ok(s) => s,
+        Err(e) => eprintln!("{}", e.to_string())
+    }
+    ```
+    */
     pub fn load_from_json(filename: &str) -> Result<Song, Error> {
         let json = std::fs::read_to_string(filename)?;
         let song = serde_json::from_str(&json)?;
